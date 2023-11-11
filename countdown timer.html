@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #timer {
+            font-size: 48px;
+        }
+
+        button {
+            font-size: 18px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Countdown Timer</h1>
+    <div id="timer">00:00</div>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+
+    <script>
+        let countdown;
+        let isRunning = false;
+
+        const timerDisplay = document.getElementById('timer');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const resetButton = document.getElementById('reset');
+
+        function startTimer(duration) {
+            isRunning = true;
+            let start = Date.now();
+            const end = start + duration;
+
+            updateTimer(duration);
+
+            countdown = setInterval(function () {
+                const remaining = end - Date.now();
+                if (remaining <= 0) {
+                    clearInterval(countdown);
+                    timerDisplay.textContent = '00:00';
+                    isRunning = false;
+                } else {
+                    updateTimer(remaining);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdown);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            isRunning = false;
+            timerDisplay.textContent = '00:00';
+        }
+
+        function updateTimer(remaining) {
+            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+            const displayMinutes = minutes < 10 ? '0' + minutes : minutes;
+            const displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = displayMinutes + ':' + displaySeconds;
+        }
+
+        startButton.addEventListener('click', () => {
+            if (!isRunning) {
+                startTimer(5 * 60 * 1000); // 5 minutes in milliseconds
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            stopTimer();
+        });
+
+        resetButton.addEventListener('click', () => {
+            resetTimer();
+        });
+    </script>
+</body>
+</html>
